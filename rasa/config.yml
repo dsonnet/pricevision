@@ -1,0 +1,104 @@
+# Rasa Configuration for PriceVision
+# RTX 3050 optimized settings
+
+version: "3.1"
+
+# Recipe for training pipeline and policies
+recipe: default.v1
+
+# Language and pipeline configuration
+language: en
+
+# NLU Pipeline - Optimized for RTX 3050
+pipeline:
+  # Tokenization
+  - name: WhitespaceTokenizer
+  
+  # Regex features for game titles and prices
+  - name: RegexFeaturizer
+    case_sensitive: false
+    use_lookup_tables: true
+    use_regexes: true
+    
+  # Lookup tables for game platforms and genres
+  - name: LexicalSyntacticFeaturizer
+  
+  # Count vectors for lightweight feature extraction
+  - name: CountVectorsFeaturizer
+    analyzer: char_wb
+    min_ngram: 1
+    max_ngram: 4
+    max_features: 1000  # Reduced for RTX 3050
+    
+  # Lightweight BERT alternative - DistilBERT
+  - name: LanguageModelFeaturizer
+    model_name: "distilbert"
+    model_weights: "distilbert-base-uncased"
+    cache_dir: "./models/distilbert"
+    
+  # Entity extraction
+  - name: DIETClassifier
+    epochs: 50  # Reduced for faster training
+    constrain_similarities: true
+    model_confidence: linear_norm
+    
+  # Entity synonyms
+  - name: EntitySynonymMapper
+  
+  # Response selector for chitchat
+  - name: ResponseSelector
+    epochs: 50
+    constrain_similarities: true
+
+# Policies - Memory optimized
+policies:
+  # Memoization for exact matches
+  - name: MemoizationPolicy
+    max_history: 3  # Reduced memory usage
+    
+  # Rule-based policy for structured conversations
+  - name: RulePolicy
+    core_fallback_threshold: 0.3
+    core_fallback_action_name: "action_default_fallback"
+    enable_fallback_prediction: true
+    
+  # Transformer policy with reduced parameters
+  - name: TEDPolicy
+    max_history: 5
+    epochs: 50  # Reduced for RTX 3050
+    constrain_similarities: true
+    model_confidence: linear_norm
+    batch_size: 16  # Smaller batch size for 4GB VRAM
+    
+    # Architecture configuration for RTX 3050
+    architecture:
+      hidden_layers_sizes:
+        text: [128, 64]  # Reduced layer sizes
+        label: [64, 32]
+      number_of_transformer_layers: 2  # Reduced layers
+      transformer_size: 128  # Smaller transformer
+      number_of_attention_heads: 4  # Fewer attention heads
+      unidirectional_encoder: false
+      use_key_relative_attention: false
+      use_value_relative_attention: false
+      max_relative_position: 5
+      
+    # Regularization
+    weight_sparsity: 0.8
+    connection_density: 0.2
+    
+    # Training configuration
+    learning_rate: 0.001
+    dense_dimension:
+      text: 128
+      label: 64
+    concat_dimension: 128
+    encoding_dimension: 64
+    
+# Assistant configuration
+assistant_id: pricevision_assistant
+
+# Session configuration
+session_config:
+  session_expiration_time: 60  # 60 minutes
+  carry_over_slots_to_new_session: true

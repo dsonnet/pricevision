@@ -1,0 +1,375 @@
+version: "3.1"
+
+stories:
+
+# Basic conversation flows
+- story: happy path greeting
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_great
+  - action: utter_happy
+
+- story: sad path greeting
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+
+- story: say goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: bot challenge
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+# Help and support flows
+- story: ask for help
+  steps:
+  - intent: ask_help
+  - action: utter_help
+
+- story: ask about features
+  steps:
+  - intent: ask_features
+  - action: utter_features
+
+# Price inquiry flows
+- story: simple price inquiry
+  steps:
+  - intent: ask_price
+  - action: action_get_game_price
+
+- story: price inquiry with missing info
+  steps:
+  - intent: ask_price
+  - action: utter_ask_game_details
+  - intent: ask_price
+    entities:
+    - game_title: "The Legend of Zelda"
+    - platform: "Nintendo Switch"
+  - action: action_get_game_price
+
+- story: price inquiry with condition check
+  steps:
+  - intent: ask_price
+    entities:
+    - game_title: "Call of Duty"
+    - platform: "PlayStation 5"
+  - action: utter_ask_condition
+  - intent: affirm
+    entities:
+    - condition: "excellent"
+  - action: action_get_game_price
+
+- story: price range inquiry
+  steps:
+  - intent: ask_price_range
+  - action: action_get_price_range
+
+- story: price comparison
+  steps:
+  - intent: compare_prices
+  - action: action_compare_marketplace_prices
+
+- story: market value inquiry
+  steps:
+  - intent: ask_market_value
+  - action: action_get_market_trends
+
+# Photo analysis flows
+- story: photo upload and analysis
+  steps:
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+
+- story: direct photo analysis
+  steps:
+  - intent: analyze_photo
+  - action: action_analyze_photo
+
+- story: photo help request
+  steps:
+  - intent: photo_help
+  - action: utter_photo_help
+
+- story: photo analysis with price inquiry
+  steps:
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+  - action: action_extract_game_info_from_photo
+  - action: action_get_photo_based_price
+
+# Game information flows
+- story: game information request
+  steps:
+  - intent: ask_game_info
+  - action: action_get_game_details
+
+- story: platform information request
+  steps:
+  - intent: ask_platform_info
+  - action: action_get_platform_info
+
+- story: game search
+  steps:
+  - intent: search_game
+  - action: action_search_game_database
+
+# Marketplace and selling flows
+- story: where to sell inquiry
+  steps:
+  - intent: ask_where_to_sell
+  - action: action_recommend_marketplace
+
+- story: selling tips request
+  steps:
+  - intent: ask_selling_tips
+  - action: action_get_selling_tips
+
+- story: market trends inquiry
+  steps:
+  - intent: ask_market_trends
+  - action: action_get_market_analysis
+
+# Complex conversation flows
+- story: comprehensive price analysis
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_price
+    entities:
+    - game_title: "Elden Ring"
+    - platform: "PC"
+  - action: utter_ask_condition
+  - intent: affirm
+    entities:
+    - condition: "good"
+  - action: action_get_game_price
+  - intent: ask_where_to_sell
+  - action: action_recommend_marketplace
+  - intent: ask_selling_tips
+  - action: action_get_selling_tips
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: photo analysis to selling advice
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+  - action: action_extract_game_info_from_photo
+  - action: action_get_photo_based_price
+  - intent: ask_where_to_sell
+  - action: action_recommend_marketplace
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: game research to price comparison
+  steps:
+  - intent: ask_game_info
+    entities:
+    - game_title: "Cyberpunk 2077"
+  - action: action_get_game_details
+  - intent: ask_price
+    entities:
+    - game_title: "Cyberpunk 2077"
+    - platform: "PC"
+  - action: action_get_game_price
+  - intent: compare_prices
+    entities:
+    - game_title: "Cyberpunk 2077"
+  - action: action_compare_marketplace_prices
+
+# Error handling and fallback flows
+- story: out of scope
+  steps:
+  - intent: ask_help
+  - action: utter_help
+  - intent: deny
+  - action: utter_out_of_scope
+
+- story: unhappy user
+  steps:
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - intent: ask_help
+  - action: utter_help
+
+# Form-based conversations
+- story: price inquiry form happy path
+  steps:
+  - intent: ask_price
+  - action: price_inquiry_form
+  - active_loop: price_inquiry_form
+  - slot_was_set:
+    - requested_slot: game_title
+  - intent: ask_price
+    entities:
+    - game_title: "Mario Kart 8"
+  - slot_was_set:
+    - game_title: "Mario Kart 8"
+  - slot_was_set:
+    - requested_slot: platform
+  - intent: ask_price
+    entities:
+    - platform: "Nintendo Switch"
+  - slot_was_set:
+    - platform: "Nintendo Switch"
+  - slot_was_set:
+    - requested_slot: condition
+  - intent: ask_price
+    entities:
+    - condition: "excellent"
+  - slot_was_set:
+    - condition: "excellent"
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_get_game_price
+
+- story: price inquiry form with interruption
+  steps:
+  - intent: ask_price
+  - action: price_inquiry_form
+  - active_loop: price_inquiry_form
+  - slot_was_set:
+    - requested_slot: game_title
+  - intent: ask_help
+  - action: utter_help
+  - action: price_inquiry_form
+  - slot_was_set:
+    - requested_slot: game_title
+  - intent: ask_price
+    entities:
+    - game_title: "FIFA 23"
+  - slot_was_set:
+    - game_title: "FIFA 23"
+  - slot_was_set:
+    - requested_slot: platform
+  - intent: ask_price
+    entities:
+    - platform: "PlayStation 5"
+  - slot_was_set:
+    - platform: "PlayStation 5"
+  - slot_was_set:
+    - requested_slot: condition
+  - intent: ask_price
+    entities:
+    - condition: "good"
+  - slot_was_set:
+    - condition: "good"
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_get_game_price
+
+# Multi-turn conversations with context
+- story: context-aware price inquiry
+  steps:
+  - intent: ask_price
+    entities:
+    - game_title: "The Witcher 3"
+    - platform: "PC"
+  - action: action_get_game_price
+  - intent: ask_price
+    entities:
+    - platform: "PlayStation 4"
+  - action: action_get_game_price
+  - intent: compare_prices
+  - action: action_compare_marketplace_prices
+
+- story: platform switching conversation
+  steps:
+  - intent: ask_platform_info
+    entities:
+    - platform: "PlayStation 5"
+  - action: action_get_platform_info
+  - intent: ask_platform_info
+    entities:
+    - platform: "Xbox Series X"
+  - action: action_get_platform_info
+  - intent: compare_prices
+  - action: action_compare_marketplace_prices
+
+# Advanced photo analysis flows
+- story: multiple photo analysis
+  steps:
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+  - intent: compare_prices
+  - action: action_compare_marketplace_prices
+
+- story: photo analysis with manual correction
+  steps:
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+  - intent: deny
+  - action: utter_ask_game_details
+  - intent: ask_price
+    entities:
+    - game_title: "Correct Game Title"
+    - platform: "Correct Platform"
+  - action: action_get_game_price
+
+# Marketplace-specific flows
+- story: marketplace comparison flow
+  steps:
+  - intent: ask_where_to_sell
+    entities:
+    - game_title: "Super Mario Odyssey"
+  - action: action_recommend_marketplace
+  - intent: compare_prices
+    entities:
+    - marketplace: "eBay"
+  - action: action_compare_marketplace_prices
+  - intent: ask_selling_tips
+  - action: action_get_selling_tips
+
+- story: market trend analysis
+  steps:
+  - intent: ask_market_trends
+  - action: action_get_market_analysis
+  - intent: ask_market_value
+    entities:
+    - genre: "RPG"
+  - action: action_get_market_trends
+  - intent: ask_where_to_sell
+  - action: action_recommend_marketplace
+
+# Error recovery flows
+- story: price inquiry with error recovery
+  steps:
+  - intent: ask_price
+  - action: action_get_game_price
+  - intent: report_issue
+  - action: utter_help
+  - intent: ask_price
+    entities:
+    - game_title: "Working Game Title"
+    - platform: "Working Platform"
+  - action: action_get_game_price
+
+- story: photo analysis error recovery
+  steps:
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+  - intent: report_issue
+  - action: utter_photo_help
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo

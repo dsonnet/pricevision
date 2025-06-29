@@ -1,0 +1,213 @@
+version: "3.1"
+
+rules:
+
+# Basic conversation rules
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- rule: Provide help when asked
+  steps:
+  - intent: ask_help
+  - action: utter_help
+
+- rule: Show features when asked
+  steps:
+  - intent: ask_features
+  - action: utter_features
+
+# Photo analysis rules
+- rule: Provide photo help when requested
+  steps:
+  - intent: photo_help
+  - action: utter_photo_help
+
+- rule: Acknowledge photo upload
+  steps:
+  - intent: upload_photo
+  - action: utter_photo_uploaded
+  - action: action_analyze_photo
+
+- rule: Analyze photo when requested
+  steps:
+  - intent: analyze_photo
+  - action: action_analyze_photo
+
+# Price inquiry form rules
+- rule: Activate price inquiry form
+  steps:
+  - intent: ask_price
+  - action: price_inquiry_form
+  - active_loop: price_inquiry_form
+
+- rule: Submit price inquiry form
+  condition:
+  - active_loop: price_inquiry_form
+  steps:
+  - action: price_inquiry_form
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: action_get_game_price
+
+# Form interruption rules
+- rule: Handle interruptions during price inquiry form
+  condition:
+  - active_loop: price_inquiry_form
+  steps:
+  - intent: ask_help
+  - action: utter_help
+  - action: price_inquiry_form
+  - active_loop: price_inquiry_form
+
+- rule: Handle goodbye during form
+  condition:
+  - active_loop: price_inquiry_form
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+  - action: action_deactivate_loop
+  - active_loop: null
+
+# Fallback rules
+- rule: Implementation fallback
+  steps:
+  - intent: nlu_fallback
+  - action: utter_default
+
+- rule: Out of scope handling
+  steps:
+  - or:
+    - intent: ask_help
+      entities: []
+    - intent: nlu_fallback
+  - action: utter_out_of_scope
+  - action: utter_help
+
+# Context-aware rules
+- rule: Ask for game details when missing
+  condition:
+  - slot_was_set:
+    - game_title: null
+  steps:
+  - intent: ask_price
+  - action: utter_ask_game_details
+
+- rule: Ask for condition when missing for price inquiry
+  condition:
+  - slot_was_set:
+    - game_title: "any_value"
+    - platform: "any_value"
+    - condition: null
+  steps:
+  - intent: ask_price
+  - action: utter_ask_condition
+
+# Direct action rules for specific intents
+- rule: Handle price range inquiries
+  steps:
+  - intent: ask_price_range
+  - action: action_get_price_range
+
+- rule: Handle price comparisons
+  steps:
+  - intent: compare_prices
+  - action: action_compare_marketplace_prices
+
+- rule: Handle market value inquiries
+  steps:
+  - intent: ask_market_value
+  - action: action_get_market_trends
+
+- rule: Handle game information requests
+  steps:
+  - intent: ask_game_info
+  - action: action_get_game_details
+
+- rule: Handle platform information requests
+  steps:
+  - intent: ask_platform_info
+  - action: action_get_platform_info
+
+- rule: Handle game searches
+  steps:
+  - intent: search_game
+  - action: action_search_game_database
+
+- rule: Handle marketplace recommendations
+  steps:
+  - intent: ask_where_to_sell
+  - action: action_recommend_marketplace
+
+- rule: Handle selling tips requests
+  steps:
+  - intent: ask_selling_tips
+  - action: action_get_selling_tips
+
+- rule: Handle market trends inquiries
+  steps:
+  - intent: ask_market_trends
+  - action: action_get_market_analysis
+
+# Error handling rules
+- rule: Handle issue reports
+  steps:
+  - intent: report_issue
+  - action: utter_help
+
+# Mood-based rules
+- rule: Respond to great mood
+  steps:
+  - intent: mood_great
+  - action: utter_happy
+
+- rule: Cheer up unhappy users
+  steps:
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+
+# Affirmation and denial rules
+- rule: Handle affirmations in context
+  condition:
+  - slot_was_set:
+    - requested_slot: condition
+  steps:
+  - intent: affirm
+  - action: price_inquiry_form
+
+- rule: Handle denials in context
+  condition:
+  - active_loop: price_inquiry_form
+  steps:
+  - intent: deny
+  - action: utter_ask_game_details
+  - action: action_deactivate_loop
+  - active_loop: null
+
+# Photo analysis specific rules
+- rule: Extract game info from photo after analysis
+  condition:
+  - slot_was_set:
+    - photo_uploaded: true
+  steps:
+  - action: action_extract_game_info_from_photo
+  - action: action_get_photo_based_price
+
+# Conversation logging rule
+- rule: Log all conversations
+  steps:
+  - intent: greet
+  - action: action_log_conversation
+
+# Default fallback rule
+- rule: Default fallback for unhandled intents
+  steps:
+  - intent: nlu_fallback
+  - action: action_default_fallback

@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  pricevision-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: pricevision-dev
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - DISPLAY=${DISPLAY}
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+      - CUDA_VISIBLE_DEVICES=0
+      - OMP_NUM_THREADS=4
+      - TOKENIZERS_PARALLELISM=false
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=pricevision
+      - MYSQL_USER=pricevision_user
+      - MYSQL_PASSWORD=pricevision_pass
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "8000:8000"  # FastAPI
+      - "5005:5005"  # Rasa
+      - "8888:8888"  # Jupyter (optional)
+    depends_on:
+      - mysql
+      - redis
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: tail -f /dev/null  # Keep container running for development
+
+  mysql:
+    image: mysql:8.0
+    container_name: pricevision-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=pricevision
+      - MYSQL_USER=pricevision_user
+      - MYSQL_PASSWORD=pricevision_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:7-alpine
+    container_name: pricevision-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: pricevision-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+
+volumes:
+  mysql_data:
+  redis_data:
+  chromadb_data:
+
+networks:
+  default:
+    name: pricevision-network

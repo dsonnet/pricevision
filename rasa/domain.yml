@@ -1,0 +1,274 @@
+# Rasa Domain for PriceVision
+# Defines intents, entities, slots, responses, and actions
+
+version: "3.1"
+
+# Intents - User intentions
+intents:
+  # Greeting and basic conversation
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  
+  # Price inquiry intents
+  - ask_price
+  - ask_price_range
+  - compare_prices
+  - ask_market_value
+  
+  # Game information intents
+  - ask_game_info
+  - ask_platform_info
+  - ask_genre_info
+  - search_game
+  
+  # Photo analysis intents
+  - upload_photo
+  - analyze_photo
+  - photo_help
+  
+  # Marketplace intents
+  - ask_where_to_sell
+  - ask_selling_tips
+  - ask_market_trends
+  
+  # Help and support
+  - ask_help
+  - ask_features
+  - report_issue
+
+# Entities - Information extraction
+entities:
+  - game_title
+  - platform
+  - genre
+  - condition
+  - price_range
+  - marketplace
+  - region
+  - year
+
+# Slots - Memory for conversation context
+slots:
+  # Game information slots
+  game_title:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: game_title
+  
+  platform:
+    type: categorical
+    values:
+      - playstation
+      - xbox
+      - nintendo
+      - pc
+      - mobile
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: platform
+  
+  genre:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: genre
+  
+  condition:
+    type: categorical
+    values:
+      - mint
+      - excellent
+      - good
+      - fair
+      - poor
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: condition
+  
+  price_range:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: price_range
+  
+  marketplace:
+    type: categorical
+    values:
+      - ebay
+      - amazon
+      - facebook
+      - mercari
+      - local
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: marketplace
+  
+  region:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: region
+  
+  # Photo analysis slots
+  photo_uploaded:
+    type: bool
+    initial_value: false
+    influence_conversation: true
+    mappings:
+    - type: custom
+  
+  photo_analysis_result:
+    type: any
+    influence_conversation: true
+    mappings:
+    - type: custom
+  
+  # User preference slots
+  preferred_marketplace:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+  
+  user_location:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+# Responses - Bot replies
+responses:
+  # Greeting responses
+  utter_greet:
+  - text: "Hello! I'm PriceVision, your intelligent assistant for second-hand game pricing. How can I help you today?"
+  - text: "Hi there! Ready to discover the value of your games? I can analyze photos or answer pricing questions!"
+  - text: "Welcome to PriceVision! Whether you have a photo to analyze or questions about game values, I'm here to help."
+
+  utter_goodbye:
+  - text: "Goodbye! Feel free to come back anytime you need help with game pricing."
+  - text: "Thanks for using PriceVision! Happy gaming and selling!"
+  - text: "See you later! Remember, I'm always here to help with your game valuation needs."
+
+  # Mood responses
+  utter_happy:
+  - text: "Great to hear you're doing well!"
+  - text: "Awesome! That positive energy will help with your game selling journey."
+
+  utter_cheer_up:
+  - text: "Here's something to cheer you up - finding the right price for your games can be quite rewarding!"
+  - text: "Don't worry, I'm here to help make your game selling experience better!"
+
+  # Bot challenge
+  utter_iamabot:
+  - text: "I'm PriceVision, an AI assistant specialized in second-hand game pricing and market analysis."
+
+  # Help responses
+  utter_help:
+  - text: |
+      I can help you with:
+      📸 Photo analysis - Upload a photo of your game for instant pricing
+      💰 Price inquiries - Ask about specific game values
+      📊 Market comparisons - Compare prices across platforms
+      🎮 Game information - Learn about platforms, genres, and trends
+      🏪 Selling advice - Get tips on where and how to sell
+      
+      What would you like to explore?
+
+  utter_features:
+  - text: |
+      🔥 PriceVision Features:
+      • AI-powered photo recognition
+      • Real-time market price analysis
+      • Multi-platform price comparison
+      • Condition-based valuation
+      • Marketplace recommendations
+      • Market trend insights
+      
+      Try uploading a photo or asking about a specific game!
+
+  # Photo analysis responses
+  utter_photo_help:
+  - text: |
+      📸 Photo Tips for Best Results:
+      • Ensure good lighting
+      • Show the game cover clearly
+      • Include any special editions or extras
+      • Capture the condition accurately
+      • Multiple angles help for better analysis
+      
+      Ready to upload your photo?
+
+  utter_photo_uploaded:
+  - text: "Great! I've received your photo. Let me analyze it for you..."
+  - text: "Photo received! Analyzing the game details and condition now..."
+
+  # Price inquiry responses
+  utter_ask_game_details:
+  - text: "To give you the most accurate price, could you tell me more about the game? What's the title and platform?"
+  - text: "I'd love to help with pricing! What game are you asking about, and what platform is it for?"
+
+  utter_ask_condition:
+  - text: "What's the condition of the game? (Mint, Excellent, Good, Fair, or Poor)"
+  - text: "To provide accurate pricing, I need to know the game's condition. How would you rate it?"
+
+  # Error and fallback responses
+  utter_default:
+  - text: "I'm not sure I understand. Could you rephrase that or ask about game pricing, photo analysis, or market information?"
+  - text: "I specialize in game pricing and market analysis. How can I help you with that?"
+
+  utter_out_of_scope:
+  - text: "I'm focused on helping with second-hand game pricing and market analysis. Is there something game-related I can help you with?"
+
+# Actions - Custom business logic
+actions:
+  # Photo analysis actions
+  - action_analyze_photo
+  - action_extract_game_info_from_photo
+  - action_get_photo_based_price
+  
+  # Price inquiry actions
+  - action_get_game_price
+  - action_get_price_range
+  - action_compare_marketplace_prices
+  - action_get_market_trends
+  
+  # Game information actions
+  - action_search_game_database
+  - action_get_game_details
+  - action_get_platform_info
+  
+  # Marketplace actions
+  - action_recommend_marketplace
+  - action_get_selling_tips
+  - action_get_market_analysis
+  
+  # Utility actions
+  - action_save_user_preferences
+  - action_log_conversation
+  - action_default_fallback
+
+# Forms - Multi-turn conversations
+forms:
+  price_inquiry_form:
+    required_slots:
+      - game_title
+      - platform
+      - condition
+
+# Session configuration
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

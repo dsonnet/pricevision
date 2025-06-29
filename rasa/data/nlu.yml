@@ -1,0 +1,519 @@
+version: "3.1"
+
+nlu:
+# Greeting intents
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+    - hi there
+    - what's up
+    - howdy
+    - greetings
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+    - thanks, bye
+    - catch you later
+    - talk to you later
+    - until next time
+    - farewell
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+    - yes please
+    - absolutely
+    - sure
+    - right
+    - exactly
+    - yep
+    - yeah
+    - ok
+    - okay
+    - sounds good
+    - that's right
+    - perfect
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+    - nope
+    - nah
+    - not interested
+    - I disagree
+    - that's wrong
+    - incorrect
+    - negative
+    - not at all
+
+- intent: mood_great
+  examples: |
+    - perfect
+    - great
+    - amazing
+    - feeling like a king
+    - wonderful
+    - I am feeling very good
+    - I am great
+    - I am amazing
+    - I am going to save the world
+    - super stoked
+    - extremely good
+    - so so perfect
+    - so good
+    - so perfect
+    - fantastic
+    - excellent
+    - awesome
+
+- intent: mood_unhappy
+  examples: |
+    - my day was horrible
+    - I am sad
+    - I don't feel very well
+    - I am disappointed
+    - super sad
+    - I'm so sad
+    - sad
+    - very sad
+    - unhappy
+    - not good
+    - not very good
+    - extremly sad
+    - so saad
+    - so sad
+    - frustrated
+    - annoyed
+    - upset
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+    - what are you?
+    - who are you?
+    - are you real?
+    - are you artificial?
+    - what kind of bot are you?
+
+# Price inquiry intents
+- intent: ask_price
+  examples: |
+    - what's the price of [The Legend of Zelda Breath of the Wild](game_title) for [Nintendo Switch](platform)?
+    - how much is [Call of Duty Modern Warfare](game_title) worth?
+    - price of [FIFA 23](game_title) on [PlayStation 5](platform)
+    - what's [Super Mario Odyssey](game_title) selling for?
+    - how much can I get for [Halo Infinite](game_title) on [Xbox Series X](platform)?
+    - value of [Pokemon Scarlet](game_title) for [Nintendo Switch](platform)
+    - what's the current price of [God of War](game_title)?
+    - how much is [Elden Ring](game_title) worth on [PC](platform)?
+    - price check for [Spider-Man Miles Morales](game_title)
+    - what can I sell [Cyberpunk 2077](game_title) for?
+    - how much does [Animal Crossing New Horizons](game_title) go for?
+    - current value of [The Last of Us Part II](game_title)
+    - what's [Minecraft](game_title) worth these days?
+    - price of [Grand Theft Auto V](game_title) on [PlayStation 4](platform)
+    - how much for [Forza Horizon 5](game_title)?
+
+- intent: ask_price_range
+  examples: |
+    - what's the price range for [action](genre) games?
+    - price range for [PlayStation 5](platform) games
+    - how much do [Nintendo Switch](platform) games typically cost?
+    - what's the average price for [RPG](genre) games?
+    - price range for games in [excellent](condition) condition
+    - typical prices for [Xbox](platform) games
+    - what do [sports](genre) games usually sell for?
+    - price range for [retro](genre) games
+    - how much do [mint condition](condition) games go for?
+    - average selling price for [PC](platform) games
+
+- intent: compare_prices
+  examples: |
+    - compare prices for [The Witcher 3](game_title)
+    - where can I get the best price for [Red Dead Redemption 2](game_title)?
+    - price comparison for [Mario Kart 8](game_title)
+    - best marketplace for selling [Assassin's Creed Valhalla](game_title)
+    - compare [eBay](marketplace) vs [Amazon](marketplace) prices
+    - which platform has better prices for [fighting](genre) games?
+    - price difference between [good](condition) and [excellent](condition) condition
+    - compare selling prices across platforms
+    - best place to sell [Nintendo](platform) games
+    - marketplace comparison for [horror](genre) games
+
+- intent: ask_market_value
+  examples: |
+    - what's the market value of [Final Fantasy VII](game_title)?
+    - current market price for [Zelda](game_title) games
+    - market value of [collector's edition](condition) games
+    - what's trending in the game market?
+    - market analysis for [PlayStation](platform) games
+    - current demand for [racing](genre) games
+    - market trends for [vintage](genre) games
+    - what games are hot right now?
+    - market value assessment
+    - investment potential of [rare](condition) games
+
+# Game information intents
+- intent: ask_game_info
+  examples: |
+    - tell me about [Horizon Zero Dawn](game_title)
+    - information about [Ghost of Tsushima](game_title)
+    - what genre is [Bloodborne](game_title)?
+    - details about [Persona 5](game_title)
+    - when was [Breath of the Wild](game_title) released?
+    - who made [Death Stranding](game_title)?
+    - game info for [Sekiro](game_title)
+    - what platform is [Gears 5](game_title) on?
+    - tell me about [Ori and the Blind Forest](game_title)
+    - information on [Hollow Knight](game_title)
+
+- intent: ask_platform_info
+  examples: |
+    - tell me about [PlayStation 5](platform)
+    - what games are on [Xbox Series X](platform)?
+    - [Nintendo Switch](platform) information
+    - [PC](platform) gaming details
+    - which platform is better for [RPG](genre) games?
+    - [PlayStation 4](platform) vs [Xbox One](platform)
+    - best platform for [indie](genre) games
+    - [mobile](platform) gaming options
+    - platform comparison
+    - which console should I buy?
+
+- intent: search_game
+  examples: |
+    - search for [zombie](genre) games
+    - find [multiplayer](genre) games
+    - look for [adventure](genre) games on [Switch](platform)
+    - search [racing](genre) games
+    - find games similar to [Dark Souls](game_title)
+    - search for [co-op](genre) games
+    - look for [puzzle](genre) games
+    - find [strategy](genre) games
+    - search [simulation](genre) games
+    - games like [Stardew Valley](game_title)
+
+# Photo analysis intents
+- intent: upload_photo
+  examples: |
+    - I want to upload a photo
+    - can I send you a picture?
+    - I have a photo of my game
+    - let me show you a picture
+    - photo upload
+    - I'll send an image
+    - can you analyze this photo?
+    - picture of my game collection
+    - image analysis
+    - photo recognition
+    - scan this game
+    - analyze my game photo
+    - I have pictures to show
+    - photo evaluation
+    - image upload
+
+- intent: analyze_photo
+  examples: |
+    - analyze this photo
+    - what game is this?
+    - identify this game from the photo
+    - photo analysis
+    - what's in this picture?
+    - recognize this game
+    - scan this image
+    - photo recognition
+    - image identification
+    - what game do you see?
+    - evaluate this photo
+    - assess this image
+    - photo evaluation
+    - picture analysis
+    - identify from image
+
+- intent: photo_help
+  examples: |
+    - how do I take a good photo?
+    - photo tips
+    - help with pictures
+    - how to upload photos?
+    - photo guidelines
+    - best way to photograph games
+    - photo quality tips
+    - image upload help
+    - picture taking advice
+    - photography tips for games
+    - how to get better photos?
+    - photo requirements
+    - image quality help
+    - camera tips
+    - photo best practices
+
+# Marketplace intents
+- intent: ask_where_to_sell
+  examples: |
+    - where should I sell my games?
+    - best place to sell [PlayStation](platform) games
+    - where can I sell [vintage](genre) games?
+    - marketplace recommendations
+    - best selling platform
+    - where to sell [collector's edition](condition) games
+    - selling venues for games
+    - online vs local selling
+    - best marketplace for [Nintendo](platform) games
+    - where do I get the most money?
+    - selling platform comparison
+    - marketplace advice
+    - where to list my games
+    - best selling sites
+    - game selling options
+
+- intent: ask_selling_tips
+  examples: |
+    - selling tips for games
+    - how to sell games effectively?
+    - best practices for selling
+    - game selling advice
+    - how to get better prices?
+    - selling strategy
+    - tips for higher prices
+    - how to sell quickly?
+    - selling dos and don'ts
+    - maximize selling price
+    - game selling guide
+    - selling techniques
+    - how to attract buyers?
+    - pricing strategy
+    - selling optimization
+
+- intent: ask_market_trends
+  examples: |
+    - what are the current market trends?
+    - trending games right now
+    - market analysis
+    - what's hot in gaming?
+    - popular games to sell
+    - market demand
+    - gaming trends
+    - what games are selling well?
+    - market insights
+    - current gaming market
+    - trend analysis
+    - market forecast
+    - gaming industry trends
+    - what's popular now?
+    - market overview
+
+# Help and support intents
+- intent: ask_help
+  examples: |
+    - help
+    - I need help
+    - can you help me?
+    - what can you do?
+    - how does this work?
+    - I'm confused
+    - assistance needed
+    - support
+    - help me out
+    - I don't understand
+    - guide me
+    - instructions
+    - how to use this?
+    - what are my options?
+    - explain this to me
+
+- intent: ask_features
+  examples: |
+    - what features do you have?
+    - what can you do?
+    - your capabilities
+    - feature list
+    - available functions
+    - what services do you offer?
+    - your abilities
+    - feature overview
+    - what's possible?
+    - service description
+    - functionality
+    - available options
+    - what do you provide?
+    - feature set
+    - capabilities overview
+
+- intent: report_issue
+  examples: |
+    - I found a bug
+    - something's not working
+    - error report
+    - technical issue
+    - problem with the system
+    - bug report
+    - issue with pricing
+    - photo analysis failed
+    - something went wrong
+    - system error
+    - not working properly
+    - technical problem
+    - malfunction
+    - service issue
+    - system bug
+
+# Lookup tables for better entity recognition
+- lookup: game_title
+  examples: |
+    - The Legend of Zelda Breath of the Wild
+    - Call of Duty Modern Warfare
+    - FIFA 23
+    - Super Mario Odyssey
+    - Halo Infinite
+    - Pokemon Scarlet
+    - God of War
+    - Elden Ring
+    - Spider-Man Miles Morales
+    - Cyberpunk 2077
+    - Animal Crossing New Horizons
+    - The Last of Us Part II
+    - Minecraft
+    - Grand Theft Auto V
+    - Forza Horizon 5
+    - The Witcher 3
+    - Red Dead Redemption 2
+    - Mario Kart 8
+    - Assassin's Creed Valhalla
+    - Final Fantasy VII
+    - Horizon Zero Dawn
+    - Ghost of Tsushima
+    - Bloodborne
+    - Persona 5
+    - Death Stranding
+    - Sekiro
+    - Gears 5
+    - Ori and the Blind Forest
+    - Hollow Knight
+    - Dark Souls
+    - Stardew Valley
+
+- lookup: platform
+  examples: |
+    - PlayStation 5
+    - PlayStation 4
+    - Xbox Series X
+    - Xbox Series S
+    - Xbox One
+    - Nintendo Switch
+    - PC
+    - Steam
+    - Epic Games
+    - PlayStation
+    - Xbox
+    - Nintendo
+    - Mobile
+    - iOS
+    - Android
+
+- lookup: genre
+  examples: |
+    - Action
+    - Adventure
+    - RPG
+    - Sports
+    - Racing
+    - Fighting
+    - Horror
+    - Puzzle
+    - Strategy
+    - Simulation
+    - Indie
+    - Multiplayer
+    - Co-op
+    - Zombie
+    - Retro
+    - Vintage
+    - Collector's Edition
+
+- lookup: condition
+  examples: |
+    - Mint
+    - Excellent
+    - Good
+    - Fair
+    - Poor
+    - New
+    - Used
+    - Like New
+    - Very Good
+    - Acceptable
+    - Collector's
+    - Sealed
+    - Complete
+    - Disc Only
+    - Case Only
+
+- lookup: marketplace
+  examples: |
+    - eBay
+    - Amazon
+    - Facebook Marketplace
+    - Mercari
+    - OfferUp
+    - Craigslist
+    - GameStop
+    - Local
+    - Online
+    - Pawn Shop
+    - Game Store
+    - Flea Market
+
+# Regular expressions for better entity extraction
+- regex: price_pattern
+  examples: |
+    - \$\d+(\.\d{2})?
+    - \d+\s?(dollars?|bucks?)
+    - \d+\s?to\s?\d+\s?(dollars?|bucks?)
+    - under\s?\$?\d+
+    - over\s?\$?\d+
+    - around\s?\$?\d+
+    - about\s?\$?\d+
+
+- regex: year_pattern
+  examples: |
+    - (19|20)\d{2}
+    - '\d{2}
+    - year\s?\d{4}
+    - released\s?in\s?\d{4}
